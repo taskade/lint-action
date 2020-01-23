@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
@@ -40,7 +42,7 @@ class ESLint {
   static lint(dir, extensions, args = "", fix = false) {
     const extensionsArg = extensions.map(ext => `.${ext}`).join(",");
     const fixArg = fix ? "--fix" : "";
-    console.log('TEST TEST TEST');
+    console.log('TEST TEST TEST: ', dir, fs.readdirSync(dir));
     return run(
       `npx --no-install eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
       {
