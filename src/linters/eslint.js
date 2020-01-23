@@ -40,6 +40,7 @@ class ESLint {
   static lint(dir, extensions, args = "", fix = false) {
     const extensionsArg = extensions.map(ext => `.${ext}`).join(",");
     const fixArg = fix ? "--fix" : "";
+    console.log('TEST TEST TEST');
     return run(
       `npx --no-install eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
       {
