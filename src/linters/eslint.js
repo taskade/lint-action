@@ -49,10 +49,17 @@ class ESLint {
 
     const items = fs.readdirSync(dir);
     for (const item of items) {
+      if (item === '.eslintrc.json') {
+        continue;
+      }
+
       let output;
 
       const itemPath = path.join(dir, item);
       if (fs.lstatSync(itemPath).isDirectory()) {
+        console.log('RUNNING: ',
+          `npx --no-install eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
+        );
         output = run(
           `npx --no-install eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
           {
@@ -61,6 +68,9 @@ class ESLint {
           },
         );
       } else {
+        console.log('RUNNING: ',
+          `npx --no-install eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "${item}"`,
+        );
         output = run(
           `npx --no-install eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "${item}"`,
           {
