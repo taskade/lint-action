@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
@@ -42,14 +43,45 @@ class ESLint {
   static lint(dir, extensions, args = "", fix = false) {
     const extensionsArg = extensions.map(ext => `.${ext}`).join(",");
     const fixArg = fix ? "--fix" : "";
-    console.log('TEST TEST TEST: ', dir, fs.readdirSync(dir));
-    return run(
-      `npx --no-install eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
-      {
-        dir,
-        ignoreErrors: true,
-      },
-    );
+
+    let status = 0;
+    let stdout = [];
+
+    const items = fs.readdirSync(dir);
+    for (const item of items) {
+      let output;
+
+      const itemPath = path.join(dir, item);
+      if (fs.lstatSync(itemPath).isDirectory()) {
+        output = run(
+          `npx --no-install eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
+          {
+            itemPath,
+            ignoreErrors: true,
+          },
+        );
+      } else {
+        output = run(
+          `npx --no-install eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "${item}"`,
+          {
+            dir,
+            ignoreErrors: true,
+          },
+        );
+      }
+
+      if (status === 0 && output.status !== 0) {
+        status = output.status;
+      }
+
+      stdout = stdout.concat(JSON.parse(output.stdout));
+    }
+
+    return {
+      status,
+      stdout: JSON.stringify(stdout),
+      stderr: null,
+    }
   }
 
   /**
