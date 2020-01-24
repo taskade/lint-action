@@ -63,6 +63,8 @@ class ESLint {
     const lintResult = initLintResult();
     lintResult.isSuccess = output.status === 0;
 
+    console.log(output.stdout);
+
     const outputJson = JSON.parse(output.stdout);
     for (const violation of outputJson) {
       const { filePath, messages } = violation;
