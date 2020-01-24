@@ -74,6 +74,8 @@ class ESLint {
         status = output.status;
       }
 
+      console.log('STDOUT: ', output.stdout);
+
       stdout = stdout.concat(JSON.parse(output.stdout));
     }
 
