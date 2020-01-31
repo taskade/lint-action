@@ -66,7 +66,7 @@ function run(cmd, options) {
 	};
 
 	try {
-		const output = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
+		const output = execSync(cmd, { encoding: "utf8", maxBuffer: 20000000, cwd: optionsWithDefaults.dir });
 		return {
 			status: 0,
 			stdout: output.trim(),
