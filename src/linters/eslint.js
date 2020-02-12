@@ -25,6 +25,7 @@ class ESLint {
 		try {
 			run("npx --no-install eslint -v", { dir });
 		} catch (err) {
+      console.error(err);
 			throw new Error(`${this.name} is not installed`);
 		}
 	}
